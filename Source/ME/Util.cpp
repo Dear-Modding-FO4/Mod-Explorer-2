@@ -3,6 +3,11 @@
 
 #include <detours/Detours.h>
 
+#undef ERROR
+#undef MEM_RELEASE
+#undef MAX_PATH
+#undef PAGE_EXECUTE_READWRITE
+
 namespace ME
 {
 	std::string GetRuntimePath() noexcept
@@ -134,5 +139,35 @@ namespace ME
 	uintptr_t DetourIATDelayed(uintptr_t a_targetModule, const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
 	{
 		return Detours::IATDelayedHook(a_targetModule, a_importModule, a_functionName, a_function);
+	}
+
+	const char* GetSaveFolderName() noexcept
+	{
+		return "Fallout4";
+	}
+
+	static std::optional<bool> LINUX_DETECT = std::nullopt;
+
+	bool UserUseWine() noexcept
+	{
+		if (LINUX_DETECT == std::nullopt)
+		{
+			auto hmod = GetModuleHandleA("kernel32.dll");
+			if (hmod && GetProcAddress(hmod, "wine_get_unix_file_name"))
+			{
+				LINUX_DETECT = true;
+				return LINUX_DETECT.value();
+			}
+
+			if (getenv("WINEDATADIR") || getenv("WINEPREFIX") || getenv("WINEHOMEDIR"))
+			{
+				LINUX_DETECT = true;
+				return LINUX_DETECT.value();
+			}
+
+			LINUX_DETECT = false;
+		}
+
+		return LINUX_DETECT.value();
 	}
 }
