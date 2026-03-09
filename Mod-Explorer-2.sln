@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.36631.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModExplorer2", "Mod-Explorer-2.vcxproj", "{A68D96C1-B433-4778-B96C-B97B5AB97EF7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06E30C65-D79A-4FEC-8A60-B36D907E6601} = {06E30C65-D79A-4FEC-8A60-B36D907E6601}
+		{FAF05090-9B74-4FBF-8D3E-F1E2D9EA032F} = {FAF05090-9B74-4FBF-8D3E-F1E2D9EA032F}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "depends", "depends", "{CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "commonlibf4_vc22", "Depends\commonlibf4_vc22.vcxproj", "{FAF05090-9B74-4FBF-8D3E-F1E2D9EA032F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3317C484-5B56-43BC-A2DE-37A001905E7A} = {3317C484-5B56-43BC-A2DE-37A001905E7A}
+		{4B0C9A46-C909-40AB-929A-A3207E7F7908} = {4B0C9A46-C909-40AB-929A-A3207E7F7908}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "commonlib-shared_vc22", "Depends\commonlib-shared_vc22.vcxproj", "{4B0C9A46-C909-40AB-929A-A3207E7F7908}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "detours_vc22", "Depends\detours_vc22.vcxproj", "{06E30C65-D79A-4FEC-8A60-B36D907E6601}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spdlog_vc22", "Depends\spdlog_vc22.vcxproj", "{3317C484-5B56-43BC-A2DE-37A001905E7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A68D96C1-B433-4778-B96C-B97B5AB97EF7}.Release|x64.ActiveCfg = Release|x64
+		{A68D96C1-B433-4778-B96C-B97B5AB97EF7}.Release|x64.Build.0 = Release|x64
+		{FAF05090-9B74-4FBF-8D3E-F1E2D9EA032F}.Release|x64.ActiveCfg = Release|x64
+		{FAF05090-9B74-4FBF-8D3E-F1E2D9EA032F}.Release|x64.Build.0 = Release|x64
+		{4B0C9A46-C909-40AB-929A-A3207E7F7908}.Release|x64.ActiveCfg = Release|x64
+		{4B0C9A46-C909-40AB-929A-A3207E7F7908}.Release|x64.Build.0 = Release|x64
+		{06E30C65-D79A-4FEC-8A60-B36D907E6601}.Release|x64.ActiveCfg = Release|x64
+		{06E30C65-D79A-4FEC-8A60-B36D907E6601}.Release|x64.Build.0 = Release|x64
+		{3317C484-5B56-43BC-A2DE-37A001905E7A}.Release|x64.ActiveCfg = Release|x64
+		{3317C484-5B56-43BC-A2DE-37A001905E7A}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FAF05090-9B74-4FBF-8D3E-F1E2D9EA032F} = {CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}
+		{4B0C9A46-C909-40AB-929A-A3207E7F7908} = {CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}
+		{06E30C65-D79A-4FEC-8A60-B36D907E6601} = {CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}
+		{3317C484-5B56-43BC-A2DE-37A001905E7A} = {CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC4FA1C0-09CB-45F2-8B7C-19CC2677AC15}
+	EndGlobalSection
+EndGlobal

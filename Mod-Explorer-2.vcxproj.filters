@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{c1735985-a4cd-4c89-9257-451b656cd961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{0508a659-6057-49fc-865f-1eef6661ffcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{58f717f8-840a-47e0-b8ca-677afa517a18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\F4SE">
+      <UniqueIdentifier>{60b068c4-07c0-47a6-a92a-765857718c13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\F4SE">
+      <UniqueIdentifier>{3fb55182-7807-4776-bd3c-18786350313d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ME">
+      <UniqueIdentifier>{b00e8067-4117-4feb-ab6d-7141d977e3b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\ME">
+      <UniqueIdentifier>{fb7b7a0b-028c-43c3-86f8-277f2777f232}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Version\resource_version2.h">
+      <Filter>res</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\F4SE\Plugin.h">
+      <Filter>inc\F4SE</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ME\Util.h">
+      <Filter>inc\ME</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ME\Asserts.h">
+      <Filter>inc\ME</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ME\Main.h">
+      <Filter>inc\ME</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Version\resource_version.rc">
+      <Filter>res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Version\build_version.txt">
+      <Filter>res</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\DllMain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\F4SE\Plugin.cpp">
+      <Filter>src\F4SE</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ME\Util.cpp">
+      <Filter>src\ME</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ME\Asserts.cpp">
+      <Filter>src\ME</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ME\Main.cpp">
+      <Filter>src\ME</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
