@@ -39,3 +39,8 @@
 
 # debug information files
 *.dwo
+/Mod-Explorer-2
+/.vs
+*.user
+/.LinkConf
+/build
