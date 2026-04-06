@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "detours_vc22", "Depends\det
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spdlog_vc22", "Depends\spdlog_vc22.vcxproj", "{3317C484-5B56-43BC-A2DE-37A001905E7A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "Depends\imgui\imgui.vcxproj", "{74E49D60-E7BF-4FBD-9BBF-927546761808}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|x64 = Release|x64
@@ -38,6 +40,8 @@ Global
 		{06E30C65-D79A-4FEC-8A60-B36D907E6601}.Release|x64.Build.0 = Release|x64
 		{3317C484-5B56-43BC-A2DE-37A001905E7A}.Release|x64.ActiveCfg = Release|x64
 		{3317C484-5B56-43BC-A2DE-37A001905E7A}.Release|x64.Build.0 = Release|x64
+		{74E49D60-E7BF-4FBD-9BBF-927546761808}.Release|x64.ActiveCfg = Release|x64
+		{74E49D60-E7BF-4FBD-9BBF-927546761808}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +51,7 @@ Global
 		{4B0C9A46-C909-40AB-929A-A3207E7F7908} = {CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}
 		{06E30C65-D79A-4FEC-8A60-B36D907E6601} = {CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}
 		{3317C484-5B56-43BC-A2DE-37A001905E7A} = {CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}
+		{74E49D60-E7BF-4FBD-9BBF-927546761808} = {CDCB9DD1-DEA2-4D68-8342-2DE9E37DAF83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC4FA1C0-09CB-45F2-8B7C-19CC2677AC15}

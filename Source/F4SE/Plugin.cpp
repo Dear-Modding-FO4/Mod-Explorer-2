@@ -1,4 +1,5 @@
 #include <F4SE/Plugin.h>
+#include <ME/Shop.h>
 
 #include <Windows.h>
 
@@ -42,7 +43,7 @@ F4SE_EXPORT bool F4SEAPI F4SEPlugin_Query(const F4SE::QueryInterface* a_f4se, F4
     a_info->version = MAKE_EXE_VERSION(VERSION_MAJOR, VERSION_MINOR, VERSION_BUILD);
     a_info->name = _PluginName;
 
-    if (!std::filesystem::exists(ME::GetRuntimeDirectory() + "Data\\F4SE\\Plugins\\version-1-10-163-0.bin"))
+    if (!std::filesystem::exists(ME::Util::GetRuntimeDirectory() + "Data\\F4SE\\Plugins\\version-1-10-163-0.bin"))
     {
         MessageBoxA(nullptr, "" _PluginName ": disabled, address library needs to be updated", "Warnings",
             MB_OK | MB_ICONWARNING | MB_TOPMOST);
@@ -53,12 +54,14 @@ F4SE_EXPORT bool F4SEAPI F4SEPlugin_Query(const F4SE::QueryInterface* a_f4se, F4
     return true;
 }
 
-F4SE_PLUGIN_PRELOAD(const F4SE::PreLoadInterface* a_preloadf4se)
-{
-    return ME::PreloadInit(a_preloadf4se);
-}
-
 F4SE_PLUGIN_LOAD(const F4SE::LoadInterface* a_f4se)
 {
-    return ME::Init(a_f4se);
+    __try
+    {
+        return ME::Shop::GetSingleton()->Initialize(a_f4se);
+    }
+    __except (1)
+    {
+        return false;
+    }
 }

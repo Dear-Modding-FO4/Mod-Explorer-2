@@ -30,20 +30,28 @@
     <ClInclude Include="Include\F4SE\Plugin.h">
       <Filter>inc\F4SE</Filter>
     </ClInclude>
-    <ClInclude Include="Include\ME\Util.h">
-      <Filter>inc\ME</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\ME\Asserts.h">
-      <Filter>inc\ME</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\ME\Main.h">
-      <Filter>inc\ME</Filter>
-    </ClInclude>
+    <ClInclude Include="Include\ME\Shop.h" />
+    <ClInclude Include="Include\ME\Core.h" />
+    <ClInclude Include="Include\ME\Util.h" />
+    <ClInclude Include="Include\ME\Graphics\GraphicsSystem.h" />
+    <ClInclude Include="Include\ME\IOSystem.h" />
+    <ClInclude Include="Include\ME\HotkeySystem.h" />
+    <ClInclude Include="Include\ME\Graphics\GraphicsShaders.h" />
+    <ClInclude Include="Include\F4SE\IBufferStream.h" />
+    <ClInclude Include="Include\F4SE\IDataStream.h" />
+    <ClInclude Include="Include\ME\Graphics\GraphicsMath.h" />
+    <ClInclude Include="Include\ME\Graphics\GraphicsObject.h" />
+    <ClInclude Include="Include\ME\Graphics\GraphicsManager.h" />
+    <ClInclude Include="Include\ME\Renderer\RendererCursor.h" />
+    <ClInclude Include="Include\ME\Graphics\GraphicsImage.h" />
+    <ClInclude Include="Resource\Resource.h" />
+    <ClInclude Include="Include\ME\Renderer\RendererBackground.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Version\resource_version.rc">
       <Filter>res</Filter>
     </ResourceCompile>
+    <ResourceCompile Include="Resource\Resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Version\build_version.txt">
@@ -57,14 +65,21 @@
     <ClCompile Include="Source\F4SE\Plugin.cpp">
       <Filter>src\F4SE</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ME\Util.cpp">
-      <Filter>src\ME</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ME\Asserts.cpp">
-      <Filter>src\ME</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ME\Main.cpp">
-      <Filter>src\ME</Filter>
-    </ClCompile>
+    <ClCompile Include="Source\ME\Shop.cpp" />
+    <ClCompile Include="Source\ME\Util.cpp" />
+    <ClCompile Include="Source\ME\Graphics\GraphicsSystem.cpp" />
+    <ClCompile Include="Source\ME\IOSystem.cpp" />
+    <ClCompile Include="Source\ME\HotkeySystem.cpp" />
+    <ClCompile Include="Source\ME\Graphics\GraphicsShaders.cpp" />
+    <ClCompile Include="Source\F4SE\IBufferStream.cpp" />
+    <ClCompile Include="Source\F4SE\IDataStream.cpp" />
+    <ClCompile Include="Source\ME\Graphics\GraphicsObject.cpp" />
+    <ClCompile Include="Source\ME\Graphics\GraphicsManager.cpp" />
+    <ClCompile Include="Source\ME\Renderer\RendererCursor.cpp" />
+    <ClCompile Include="Source\ME\Graphics\GraphicsImage.cpp" />
+    <ClCompile Include="Source\ME\Renderer\RendererBackground.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resource\cursor.png" />
   </ItemGroup>
 </Project>

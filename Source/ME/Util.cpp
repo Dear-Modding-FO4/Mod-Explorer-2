@@ -1,173 +1,145 @@
-#include <ME/Util.h>
-#include <ME/Asserts.h>
-
+#include <F4SE/Impl/PCH.h>
 #include <detours/Detours.h>
+#include <ME/Util.h>
 
-#undef ERROR
-#undef MEM_RELEASE
-#undef MAX_PATH
-#undef PAGE_EXECUTE_READWRITE
-
-namespace ME
+ME::Util::ScopeLock::ScopeLock(uintptr_t a_target, uintptr_t a_size) noexcept :
+	_unlocked(false), _old(0), _target(a_target), _size(a_size)
 {
-	std::string GetRuntimePath() noexcept
+	_unlocked = REX::W32::VirtualProtect(reinterpret_cast<void*>(a_target), (size_t)a_size,
+		REX::W32::PAGE_EXECUTE_READWRITE, (uint32_t*)&_old);
+}
+
+ME::Util::ScopeLock::ScopeLock(void* a_target, uintptr_t a_size) noexcept :
+	_unlocked(false), _old(0), _target((uintptr_t)a_target), _size(a_size)
+{
+	_unlocked = REX::W32::VirtualProtect(a_target, (size_t)a_size, REX::W32::PAGE_EXECUTE_READWRITE, (uint32_t*)&_old);
+}
+
+ME::Util::ScopeLock::~ScopeLock() noexcept
+{
+	if (_unlocked)
 	{
-		static char	appPath[4096] = { 0 };
+		// Ignore if this fails, the memory was copied either way
+		REX::W32::VirtualProtect(reinterpret_cast<void*>(_target), (size_t)_size, _old, (uint32_t*)&_old);
+		REX::W32::FlushInstructionCache(REX::W32::GetCurrentProcess(), (void*)_target, _size);
+		_unlocked = false;
+	}
+}
 
-		if (appPath[0])
-			return appPath;
+std::string ME::Util::GetRuntimePath() noexcept
+{
+	static char	appPath[4096] = { 0 };
 
-		ME_Assert(REX::W32::GetModuleFileNameA(REX::W32::GetModuleHandleA(nullptr), appPath, sizeof(appPath)));
+	if (appPath[0])
 		return appPath;
+
+	REX::W32::GetModuleFileNameA(REX::W32::GetModuleHandleA(nullptr), appPath, sizeof(appPath));
+	return appPath;
+}
+
+std::string ME::Util::GetRuntimeDirectory() noexcept
+{
+	std::string runtimeDirectory;
+
+	if (runtimeDirectory.empty())
+	{
+		std::string	runtimePath = GetRuntimePath();
+		// truncate at last slash
+		std::string::size_type	lastSlash = runtimePath.rfind('\\');
+		if (lastSlash != std::string::npos)
+			// if we don't find a slash something is VERY WRONG
+			runtimeDirectory = runtimePath.substr(0, lastSlash + 1);
 	}
 
-	std::string GetRuntimeDirectory() noexcept
-	{
-		std::string runtimeDirectory;
+	return runtimeDirectory;
+}
 
-		if (runtimeDirectory.empty())
-		{
-			std::string	runtimePath = GetRuntimePath();
-			// truncate at last slash
-			std::string::size_type	lastSlash = runtimePath.rfind('\\');
-			if (lastSlash != std::string::npos)
-				// if we don't find a slash something is VERY WRONG
-				runtimeDirectory = runtimePath.substr(0, lastSlash + 1);
-		}
+void ME::Util::Write(uintptr_t a_target, const std::initializer_list<uint8_t>& a_data) noexcept
+{
+	if (!a_target || !a_data.size()) return;
+	REL::Write(a_target, (const void*)a_data.begin(), a_data.size());
+}
 
-		return runtimeDirectory;
-	}
+void ME::Util::WriteNop(uintptr_t a_target, size_t a_size) noexcept
+{
+	if (!a_target || !a_size) return;
+	std::fill_n(reinterpret_cast<std::uint8_t*>(a_target), a_size, REL::NOP);
+}
 
-	ScopeLock::ScopeLock(uintptr_t a_target, uintptr_t a_size) noexcept :
-		_unlocked(false), _old(0), _target(a_target), _size(a_size)
-	{
-		_unlocked = REX::W32::VirtualProtect(reinterpret_cast<void*>(a_target), (size_t)a_size,
-			REX::W32::PAGE_EXECUTE_READWRITE, (uint32_t*)&_old);
-	}
+void ME::Util::WriteSafe(uintptr_t a_target, const std::initializer_list<uint8_t>& a_data) noexcept
+{
+	if (!a_target || !a_data.size()) return;
 
-	ScopeLock::ScopeLock(void* a_target, uintptr_t a_size) noexcept :
-		_unlocked(false), _old(0), _target((uintptr_t)a_target), _size(a_size)
-	{
-		_unlocked = REX::W32::VirtualProtect(a_target, (size_t)a_size, REX::W32::PAGE_EXECUTE_READWRITE, (uint32_t*)&_old);
-	}
-
-	ScopeLock::~ScopeLock() noexcept
-	{
-		if (_unlocked)
-		{
-			// Ignore if this fails, the memory was copied either way
-			REX::W32::VirtualProtect(reinterpret_cast<void*>(_target), (size_t)_size, _old, (uint32_t*)&_old);
-			REX::W32::FlushInstructionCache(REX::W32::GetCurrentProcess(), (void*)_target, _size);
-			_unlocked = false;
-		}
-	}
-
-	void Write(uintptr_t a_target, const std::initializer_list<uint8_t>& a_data) noexcept
-	{
-		if (!a_target || !a_data.size()) return;
+	ScopeLock Lock(a_target, a_data.size());
+	if (Lock.HasUnlocked())
 		REL::Write(a_target, (const void*)a_data.begin(), a_data.size());
-	}
+}
 
-	void WriteNop(uintptr_t a_target, size_t a_size) noexcept
-	{
-		if (!a_target || !a_size) return;
+void ME::Util::WriteSafeNop(uintptr_t a_target, size_t a_size) noexcept
+{
+	if (!a_target || !a_size) return;
+
+	ScopeLock Lock(a_target, a_size);
+	if (Lock.HasUnlocked())
 		std::fill_n(reinterpret_cast<std::uint8_t*>(a_target), a_size, REL::NOP);
-	}
+}
 
-	void WriteSafe(uintptr_t a_target, const std::initializer_list<uint8_t>& a_data) noexcept
-	{
-		if (!a_target || !a_data.size()) return;
+bool ME::Util::IsRuntimeOG() noexcept
+{
+	return REL::Module::IsRuntimeOG();
+}
 
-		ScopeLock Lock(a_target, a_data.size());
-		if (Lock.HasUnlocked())
-			REL::Write(a_target, (const void*)a_data.begin(), a_data.size());
-	}
+bool ME::Util::IsRuntimeNG() noexcept
+{
+	return REL::Module::IsRuntimeNG();
+}
 
-	void WriteSafeNop(uintptr_t a_target, size_t a_size) noexcept
-	{
-		if (!a_target || !a_size) return;
-		ScopeLock Lock(a_target, a_size);
-		if (Lock.HasUnlocked())
-			std::fill_n(reinterpret_cast<std::uint8_t*>(a_target), a_size, REL::NOP);
-	}
+bool ME::Util::IsRuntimeAE() noexcept
+{
+	return REL::Module::IsRuntimeAE();
+}
 
-	bool IsRuntimeOG() noexcept
-	{
-		return REL::Module::IsRuntimeOG();
-	}
+uintptr_t ME::Util::DetourJump(uintptr_t a_target, uintptr_t a_function) noexcept
+{
+	return Detours::X64::DetourFunction(a_target, a_function, Detours::X64Option::USE_REL32_JUMP);
+}
 
-	bool IsRuntimeNG() noexcept
-	{
-		return REL::Module::IsRuntimeNG();
-	}
+uintptr_t ME::Util::DetourCall(uintptr_t a_target, uintptr_t a_function) noexcept
+{
+	return Detours::X64::DetourFunction(a_target, a_function, Detours::X64Option::USE_REL32_CALL);
+}
 
-	bool IsRuntimeAE() noexcept
-	{
-		return REL::Module::IsRuntimeAE();
-	}
+bool ME::Util::DetourRemove(uintptr_t a_target) noexcept
+{
+	return Detours::X64::DetourRemove(a_target);
+}
 
-	uintptr_t DetourJump(uintptr_t a_target, uintptr_t a_function) noexcept
-	{
-		return Detours::X64::DetourFunction(a_target, a_function, Detours::X64Option::USE_REL32_JUMP);
-	}
+uintptr_t ME::Util::DetourVTable(uintptr_t a_target, uintptr_t a_function, uint32_t a_index) noexcept
+{
+	return Detours::X64::DetourVTable(a_target, a_function, a_index);
+}
 
-	uintptr_t DetourCall(uintptr_t a_target, uintptr_t a_function) noexcept
-	{
-		return Detours::X64::DetourFunction(a_target, a_function, Detours::X64Option::USE_REL32_CALL);
-	}
+uintptr_t ME::Util::DetourIAT(const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
+{
+	return Detours::IATHook(REL::Module::GetSingleton()->base(), a_importModule, a_functionName, a_function);
+}
 
-	uintptr_t DetourVTable(uintptr_t a_target, uintptr_t a_function, uint32_t a_index) noexcept
-	{
-		return Detours::X64::DetourVTable(a_target, a_function, a_index);
-	}
+uintptr_t ME::Util::DetourIAT(uintptr_t a_targetModule, const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
+{
+	return Detours::IATHook(a_targetModule, a_importModule, a_functionName, a_function);
+}
 
-	uintptr_t DetourIAT(const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
-	{
-		return Detours::IATHook(REL::Module::GetSingleton()->base(), a_importModule, a_functionName, a_function);
-	}
+uintptr_t ME::Util::DetourIATDelayed(const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
+{
+	return Detours::IATDelayedHook(REL::Module::GetSingleton()->base(), a_importModule, a_functionName, a_function);
+}
 
-	uintptr_t DetourIAT(uintptr_t a_targetModule, const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
-	{
-		return Detours::IATHook(a_targetModule, a_importModule, a_functionName, a_function);
-	}
+uintptr_t ME::Util::DetourIATDelayed(uintptr_t a_targetModule, const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
+{
+	return Detours::IATDelayedHook(a_targetModule, a_importModule, a_functionName, a_function);
+}
 
-	uintptr_t DetourIATDelayed(const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
-	{
-		return Detours::IATDelayedHook(REL::Module::GetSingleton()->base(), a_importModule, a_functionName, a_function);
-	}
-
-	uintptr_t DetourIATDelayed(uintptr_t a_targetModule, const char* a_importModule, const char* a_functionName, uintptr_t a_function) noexcept
-	{
-		return Detours::IATDelayedHook(a_targetModule, a_importModule, a_functionName, a_function);
-	}
-
-	const char* GetSaveFolderName() noexcept
-	{
-		return "Fallout4";
-	}
-
-	static std::optional<bool> LINUX_DETECT = std::nullopt;
-
-	bool UserUseWine() noexcept
-	{
-		if (LINUX_DETECT == std::nullopt)
-		{
-			auto hmod = GetModuleHandleA("kernel32.dll");
-			if (hmod && GetProcAddress(hmod, "wine_get_unix_file_name"))
-			{
-				LINUX_DETECT = true;
-				return LINUX_DETECT.value();
-			}
-
-			if (getenv("WINEDATADIR") || getenv("WINEPREFIX") || getenv("WINEHOMEDIR"))
-			{
-				LINUX_DETECT = true;
-				return LINUX_DETECT.value();
-			}
-
-			LINUX_DETECT = false;
-		}
-
-		return LINUX_DETECT.value();
-	}
+const char* ME::Util::GetSaveFolderName() noexcept
+{
+	return "Fallout4";
 }

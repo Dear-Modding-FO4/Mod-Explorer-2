@@ -6,14 +6,12 @@
 #include <cstdint>
 
 #include <resource_version2.h>
-#include <ME/Util.h>
-#include <ME/Main.h>
 
 #define MAKE_EXE_VERSION_EX(major, minor, build, sub)	((((major) & 0xFF) << 24) | (((minor) & 0xFF) << 16) | (((build) & 0xFFF) << 4) | ((sub) & 0xF))
 #define MAKE_EXE_VERSION(major, minor, build)			MAKE_EXE_VERSION_EX(major, minor, build, 0)
 
-#define _PluginName         "Mod Explorer 2"
-#define _PluginAuthor       "Dear Modding FO4 Team"
+#define _PluginName         "pme2"
+#define _PluginAuthor       "perchik71"
 
 enum class F4SEAddressIndependence : std::uint32_t
 {
@@ -42,6 +40,4 @@ enum class F4SEStructureIndependence : std::uint32_t
 
 // For F4SE OG
 F4SE_EXPORT bool F4SEAPI F4SEPlugin_Query(const F4SE::QueryInterface* a_f4se, F4SE::PluginInfo* a_info);
-// No supported OG
-F4SE_PLUGIN_PRELOAD(const F4SE::PreLoadInterface* a_preloadf4se);
 F4SE_PLUGIN_LOAD(const F4SE::LoadInterface* a_f4se);

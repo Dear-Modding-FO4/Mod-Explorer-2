@@ -1,0 +1,152 @@
+#include <ME/Graphics/GraphicsSystem.h>
+#include <ME/Graphics/GraphicsManager.h>
+#include <ME/Renderer/RendererCursor.h>
+#include <ME/Renderer/RendererBackground.h>
+#include <ME/Shop.h>
+#include <Windows.h>
+
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <imgui/backends/imgui_impl_dx11.h>
+#include <imgui/backends/imgui_impl_win32.h>
+
+bool ME::GraphicsSystem::Initialize() noexcept
+{
+	// Hook draw mode
+	*(uintptr_t*)&subInRenderWndSwap = Util::DetourCall(REL::Relocation(REL::ID{ 1075087, 2228913 },
+		REL::Offset{ 0xE3 }).address(), (uintptr_t)&GameSubInRenderWndSwap);
+
+	// Hook draw frame
+	*(uintptr_t*)&rendererUI = REL::Relocation(REL::ID{ 386550, 2222551 }).address();
+	*(uintptr_t*)&rendererUIRestore = Util::DetourCall(REL::Relocation(REL::ID{ 1075087, 2228913 }, 
+		REL::Offset{ 0x2AA, 0x28D }).address(), (uintptr_t)&GameRendererUI);
+
+	return subInRenderWndSwap && rendererUI && rendererUIRestore;
+}
+
+bool ME::GraphicsSystem::InitializeContinue() noexcept
+{
+	rendererData = (RE::BSGraphics::RendererData*)REL::Relocation(REL::ID{ 235166, 2704527 }).address();
+	if (!rendererData) return false;
+
+	// Make process DPI aware and obtain main monitor scale
+	ImGui_ImplWin32_EnableDpiAwareness();
+
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	auto& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+
+	// For a normal monitor, the width is greater than the height
+	horzDisplay = rendererData->renderWindow[0].windowHeight > rendererData->renderWindow[0].windowWidth;
+
+	if (horzDisplay)
+		ratio = (float)rendererData->renderWindow[0].windowHeight / (float)rendererData->renderWindow[0].windowWidth;
+	else
+		ratio = (float)rendererData->renderWindow[0].windowWidth / (float)rendererData->renderWindow[0].windowHeight;
+
+	if (ratio >= 2.2)
+		ratioEnum = Ratio::kRatio_21x9;
+	else if (ratio >= 1.7)
+		ratioEnum = Ratio::kRatio_16x9;
+	else if (ratio >= 1.2)
+		ratioEnum = Ratio::kRatio_4x3;
+
+	// Create renderer obj mandatory
+	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererBackground>());
+	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererCursor>(rendererData->device, rendererData->context));
+
+	// Setup Platform/Renderer backends
+	return 
+		ImGui_ImplWin32_Init(rendererData->renderWindow[0].hwnd) &&
+		ImGui_ImplDX11_Init((ID3D11Device*)rendererData->device, (ID3D11DeviceContext*)rendererData->context);
+}
+
+void ME::GraphicsSystem::Release() noexcept
+{
+	auto shop = Shop::GetSingleton();
+	shop->Lock();
+
+	if (subInRenderWndSwap)
+	{
+		Util::DetourRemove(*(uintptr_t*)&subInRenderWndSwap);
+		subInRenderWndSwap = nullptr;
+	}
+
+	if (rendererUIRestore)
+	{
+		Util::DetourRemove(*(uintptr_t*)&rendererUIRestore);
+		rendererUIRestore = nullptr;
+	}
+
+	// Cleanup
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
+	shop->Unlock();
+}
+
+void* ME::GraphicsSystem::GameSubInRenderWndSwap(void* _this) noexcept
+{
+	if (Shop::GetSingleton()->HasOpened())
+		// Draw menu mode ??? idk black screen...
+		return nullptr;
+	// Return default
+	return Util::ThisVirtualCall<void*>(0x460, _this);
+}
+
+void ME::GraphicsSystem::GameRendererUI(uint32_t a_unk) noexcept
+{
+	auto shop = Shop::GetSingleton();
+	auto graphics = GraphicsSystem::GetSingleton();
+
+	shop->Lock();
+	if (!shop->HasOpened())
+	{
+		shop->Unlock();
+		// Renderer normal
+		graphics->rendererUI(a_unk);
+		return;
+	}
+	if (!shop->HasInitializeGraphicsAndData())
+	{
+		shop->Unlock();
+		// fatal
+		return;
+	}
+
+	// -------------------
+	// RENDER
+	// -------------------
+
+	if (!graphics->rendererData)
+	{
+		shop->Unlock();
+		// fatal
+		return;
+	}
+
+	REX::W32::ID3D11RenderTargetView* pRenderTargetViews{ nullptr };
+	REX::W32::ID3D11DepthStencilView* pDepthStencilView{ nullptr };
+	graphics->rendererData->context->OMGetRenderTargets(0, &pRenderTargetViews, &pDepthStencilView);
+
+	constexpr static float bg[4]{ 0.0f, 0.0f, 0.0f, 0.0f };
+	graphics->rendererData->context->ClearRenderTargetView(pRenderTargetViews, bg);
+
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	GraphicsManager::GetSingleton()->Execute();
+
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	shop->Unlock();
+}
