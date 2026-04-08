@@ -161,6 +161,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Include\ME\DataSystem.h" />
     <ClInclude Include="Include\ME\Graphics\GraphicsImage.h" />
     <ClInclude Include="Include\ME\Graphics\GraphicsManager.h" />
     <ClInclude Include="Include\ME\Graphics\GraphicsObject.h" />
@@ -188,6 +189,7 @@
     <Text Include="Version\build_version.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ME\DataSystem.cpp" />
     <ClCompile Include="Source\ME\Renderer\RendererBackground.cpp" />
     <ClCompile Include="Source\ME\Graphics\GraphicsImage.cpp" />
     <ClCompile Include="Source\ME\Renderer\RendererCursor.cpp" />

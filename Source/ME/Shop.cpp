@@ -1,6 +1,7 @@
 #include <F4SE/Plugin.h>
 #include <ME/Shop.h>
 #include <ME/IOSystem.h>
+#include <ME/DataSystem.h>
 #include <ME/Graphics/GraphicsSystem.h>
 #include <Windows.h>
 
@@ -92,15 +93,13 @@ void ME::Shop::InitializeGameHooks() noexcept
 	});
 }
 
-void ME::Shop::InitializeGraphicsAndData() noexcept
+void ME::Shop::InitializeGraphics() noexcept
 {
 	if (!hasInitializeGameHooks)
 		return;
 
 	static std::once_flag once;
 	std::call_once(once, [&]() {
-		// TODO
-
 		if (!GraphicsSystem::GetSingleton()->InitializeContinue())
 		{
 			IOSystem::GetSingleton()->Release();
@@ -118,6 +117,17 @@ void ME::Shop::InitializeGraphicsAndData() noexcept
 	});
 }
 
+void ME::Shop::ReadGameData() noexcept
+{
+	if (!DataSystem::GetSingleton()->ReadData())
+	{
+		REX::CRITICAL("DataSystem::ReadData() return failed.");
+		return;
+	}
+	
+	DataSystem::GetSingleton()->Dump();
+}
+
 void ME::Shop::F4SEMessageListener(F4SE::MessagingInterface::Message* a_msg) noexcept
 {
 	if (!a_msg) return;
@@ -127,8 +137,11 @@ void ME::Shop::F4SEMessageListener(F4SE::MessagingInterface::Message* a_msg) noe
 	case F4SE::MessagingInterface::kPostLoad:
 		Shop::GetSingleton()->InitializeGameHooks();
 		break;
+	case F4SE::MessagingInterface::kGameDataReady:
+		Shop::GetSingleton()->ReadGameData();
+		break;
 	case F4SE::MessagingInterface::kGameLoaded:
-		Shop::GetSingleton()->InitializeGraphicsAndData();
+		Shop::GetSingleton()->InitializeGraphics();
 		break;
 	default:
 		break;

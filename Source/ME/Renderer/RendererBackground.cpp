@@ -5,13 +5,13 @@
 
 ME::RendererBackground::RendererBackground() :
 	GraphicsObject()
-{
-
-
-}
+{}
 
 void ME::RendererBackground::Execute() const noexcept
 {
+	constexpr static auto basementColor = IM_COL32(11, 15, 17, 255);
+	constexpr static auto basementHitColor = IM_COL32(13, 19, 21, 255);
+
 	auto drawList = ImGui::GetBackgroundDrawList();
 	auto renderer = GraphicsSystem::GetSingleton();
 	auto rendererData = renderer->GetRendererData();
@@ -24,7 +24,9 @@ void ME::RendererBackground::Execute() const noexcept
 		(float)(rendererData->renderWindow[0].windowHeight - rendererData->renderWindow[0].windowY)
 	};
 
-	drawList->AddRectFilledMultiColor({ .0f, 0.f }, wndSize,
-		IM_COL32(255, 0, 0, 255), IM_COL32(255, 0, 128, 255),
-		IM_COL32(255, 0, 255, 255), IM_COL32(255, 128, 0, 255));
+	drawList->AddRectFilled({ .0f, 0.f }, wndSize, basementColor);
+	
+	for (float j = .0f; j < wndSize.x; j += 5.f)
+		for (float k = .0f; k < wndSize.y; k += 5.f)
+			drawList->AddRectFilled({ j, k }, { j + 1, k + 1.f }, basementHitColor);
 }

@@ -16,8 +16,6 @@ size_t ME::GraphicsManager::Add(const std::shared_ptr<GraphicsObject> a_object) 
     auto result = list.size();
 	try
 	{
-		REX::INFO("Added");
-
 		list.emplace_back(a_object);
 		return result;
 	}

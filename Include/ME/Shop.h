@@ -31,7 +31,8 @@ namespace ME
 		Shop& operator=(Shop&&) = delete;
 
 		void InitializeGameHooks() noexcept;
-		void InitializeGraphicsAndData() noexcept;
+		void InitializeGraphics() noexcept;
+		void ReadGameData() noexcept;
 
 		static void F4SEMessageListener(F4SE::MessagingInterface::Message* a_msg) noexcept;
 		static void GameKeyboardListener(uint8_t a_vkCode, bool a_up) noexcept;

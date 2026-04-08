@@ -46,6 +46,7 @@
     <ClInclude Include="Include\ME\Graphics\GraphicsImage.h" />
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Include\ME\Renderer\RendererBackground.h" />
+    <ClInclude Include="Include\ME\DataSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Version\resource_version.rc">
@@ -78,6 +79,7 @@
     <ClCompile Include="Source\ME\Renderer\RendererCursor.cpp" />
     <ClCompile Include="Source\ME\Graphics\GraphicsImage.cpp" />
     <ClCompile Include="Source\ME\Renderer\RendererBackground.cpp" />
+    <ClCompile Include="Source\ME\DataSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resource\cursor.png" />
