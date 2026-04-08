@@ -121,11 +121,11 @@ void ME::Shop::ReadGameData() noexcept
 {
 	if (!DataSystem::GetSingleton()->ReadData())
 	{
-		REX::CRITICAL("DataSystem::ReadData() return failed.");
+		REX::WARN("DataSystem::ReadData() return failed.");
 		return;
 	}
 	
-	DataSystem::GetSingleton()->Dump();
+	//DataSystem::GetSingleton()->Dump();
 }
 
 void ME::Shop::F4SEMessageListener(F4SE::MessagingInterface::Message* a_msg) noexcept
