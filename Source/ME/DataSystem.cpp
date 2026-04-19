@@ -133,6 +133,8 @@ bool ME::DataSystem::Plugin::Add(const RE::TESForm* a_form) noexcept
 
 size_t ME::DataSystem::Plugin::Count(RE::ENUM_FORM_ID a_type) const noexcept
 {
+	std::lock_guard locker(ME::DataSystem::GetSingleton()->lock);
+
 	auto it = std::find(AllowFormType.begin(), AllowFormType.end(), a_type);
 	if (it != AllowFormType.end())
 		return datas[std::distance(AllowFormType.begin(), it)].size();
@@ -141,6 +143,8 @@ size_t ME::DataSystem::Plugin::Count(RE::ENUM_FORM_ID a_type) const noexcept
 
 size_t ME::DataSystem::Plugin::CountAll() const noexcept
 {
+	std::lock_guard locker(ME::DataSystem::GetSingleton()->lock);
+
 	size_t ret = 0;
 	for (auto& items : datas)
 		ret += items.size();
@@ -149,6 +153,8 @@ size_t ME::DataSystem::Plugin::CountAll() const noexcept
 
 bool ME::DataSystem::Plugin::Empty() const noexcept
 {
+	std::lock_guard locker(ME::DataSystem::GetSingleton()->lock);
+
 	for (auto& items : datas)
 		if (!items.empty())
 			return false;
@@ -157,12 +163,16 @@ bool ME::DataSystem::Plugin::Empty() const noexcept
 
 void ME::DataSystem::Plugin::Clear() noexcept
 {
+	std::lock_guard locker(ME::DataSystem::GetSingleton()->lock);
+
 	for (auto& items : datas)
 		items.clear();
 }
 
 size_t ME::DataSystem::Plugin::GetData(RE::ENUM_FORM_ID a_type, std::vector<Item>& a_receive, bool a_clear) noexcept
 {
+	std::lock_guard locker(ME::DataSystem::GetSingleton()->lock);
+
 	if (a_clear)
 		a_receive.clear();
 
@@ -179,6 +189,8 @@ size_t ME::DataSystem::Plugin::GetData(RE::ENUM_FORM_ID a_type, std::vector<Item
 
 size_t ME::DataSystem::Plugin::GetAllData(std::vector<Item>& a_receive, bool a_clear) noexcept
 {
+	std::lock_guard locker(ME::DataSystem::GetSingleton()->lock);
+
 	if (a_clear)
 	{
 		a_receive.clear();

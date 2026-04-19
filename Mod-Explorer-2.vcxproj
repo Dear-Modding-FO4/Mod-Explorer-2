@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -144,8 +144,8 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
-      <DisableSpecificWarnings>4200;4996;26444;26495;26110</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(SolutionDir)Depends\commonlibf4\include;$(SolutionDir)Depends;$(SolutionDir)Depends\detours;$(SolutionDir)Depends\commonlibf4\lib\commonlib-shared\include;$(SolutionDir)Version;$(SolutionDir)Include;$(SolutionDir)Depends\imgui;$(SolutionDir)Depends\toml11\single_include;$(SolutionDir)Resource;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4200;4996;26444;26495;26110;4244;4267;26819;28020;6294;4723</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>$(SolutionDir)Depends\commonlibf4\include;$(SolutionDir)Depends;$(SolutionDir)Depends\detours;$(SolutionDir)Depends\commonlibf4\lib\commonlib-shared\include;$(SolutionDir)Version;$(SolutionDir)Include;$(SolutionDir)Depends\imgui;$(SolutionDir)Depends\toml11\single_include;$(SolutionDir)Resource;$(SolutionDir)Depends\imspinner;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,6 +161,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Include\ME\Graphics\GraphicsFont.h" />
     <ClInclude Include="Include\ME\DataSystem.h" />
     <ClInclude Include="Include\ME\Graphics\GraphicsImage.h" />
     <ClInclude Include="Include\ME\Graphics\GraphicsManager.h" />
@@ -173,11 +174,20 @@
     <ClInclude Include="Include\ME\Graphics\GraphicsSystem.h" />
     <ClInclude Include="Include\F4SE\Plugin.h" />
     <ClInclude Include="Include\ME\Core.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlBase.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlButton.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlChild.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlBase.h" />
     <ClInclude Include="Include\ME\Shop.h" />
     <ClInclude Include="Include\ME\Util.h" />
     <ClInclude Include="Include\ME\IOSystem.h" />
     <ClInclude Include="Include\ME\Renderer\RendererCursor.h" />
     <ClInclude Include="Include\ME\Renderer\RendererBackground.h" />
+    <ClInclude Include="Include\ME\Renderer\RendererHeader.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlFrame.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlLabel.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlAnimLogoSpinner.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlImageButton.h" />
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Version\resource_version2.h" />
   </ItemGroup>
@@ -189,6 +199,16 @@
     <Text Include="Version\build_version.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlBase.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlButton.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlChild.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlImageButton.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlAnimLogoSpinner.cpp" />
+    <ClCompile Include="Source\ME\Graphics\GraphicsFont.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlLabel.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlBase.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlFrame.cpp" />
+    <ClCompile Include="Source\ME\Renderer\RendererHeader.cpp" />
     <ClCompile Include="Source\ME\DataSystem.cpp" />
     <ClCompile Include="Source\ME\Renderer\RendererBackground.cpp" />
     <ClCompile Include="Source\ME\Graphics\GraphicsImage.cpp" />

@@ -47,6 +47,16 @@
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Include\ME\Renderer\RendererBackground.h" />
     <ClInclude Include="Include\ME\DataSystem.h" />
+    <ClInclude Include="Include\ME\Renderer\RendererHeader.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlFrame.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlBase.h" />
+    <ClInclude Include="Include\ME\Graphics\GraphicsFont.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlLabel.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlAnimLogoSpinner.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\RendererControlImageButton.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlChild.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlBase.h" />
+    <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlButton.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Version\resource_version.rc">
@@ -80,6 +90,16 @@
     <ClCompile Include="Source\ME\Graphics\GraphicsImage.cpp" />
     <ClCompile Include="Source\ME\Renderer\RendererBackground.cpp" />
     <ClCompile Include="Source\ME\DataSystem.cpp" />
+    <ClCompile Include="Source\ME\Renderer\RendererHeader.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlFrame.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlBase.cpp" />
+    <ClCompile Include="Source\ME\Graphics\GraphicsFont.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlLabel.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlAnimLogoSpinner.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\RendererControlImageButton.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlBase.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlChild.cpp" />
+    <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resource\cursor.png" />

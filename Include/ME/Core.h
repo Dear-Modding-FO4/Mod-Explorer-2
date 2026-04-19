@@ -32,4 +32,16 @@ namespace ME
 	class GraphicsImage;
 
 	class RendererCursor;
+
+	namespace Controls
+	{
+		class IRendererControlBase;
+		class IRendererControlChild;
+		class IRendererControlButton;
+		class RendererControlBase;
+		class RendererControlFrame;
+		class RendererControlLabel;
+		class RendererControlAnimLogoSpinner;
+		class RendererControlImageButton;
+	}
 }

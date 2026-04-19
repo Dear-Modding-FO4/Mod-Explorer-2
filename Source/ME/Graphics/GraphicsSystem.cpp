@@ -1,7 +1,9 @@
 #include <ME/Graphics/GraphicsSystem.h>
+#include <ME/Graphics/GraphicsFont.h>
 #include <ME/Graphics/GraphicsManager.h>
 #include <ME/Renderer/RendererCursor.h>
 #include <ME/Renderer/RendererBackground.h>
+#include <ME/Renderer/RendererHeader.h>
 #include <ME/Shop.h>
 #include <Windows.h>
 
@@ -9,6 +11,19 @@
 #include <imgui_internal.h>
 #include <imgui/backends/imgui_impl_dx11.h>
 #include <imgui/backends/imgui_impl_win32.h>
+
+#undef ERROR
+#undef MEM_RELEASE
+#undef MAX_PATH
+
+namespace ME
+{
+	std::shared_ptr<Graphics::GraphicsFont> DefaultFont;
+	std::shared_ptr<Graphics::GraphicsFont> DefaultFontBold;
+	std::shared_ptr<Graphics::GraphicsFont> LogoFontBold;
+	std::shared_ptr<Graphics::GraphicsFont> UserFont;
+	std::shared_ptr<Graphics::GraphicsFont> UserFontBold;
+}
 
 bool ME::GraphicsSystem::Initialize() noexcept
 {
@@ -57,8 +72,24 @@ bool ME::GraphicsSystem::InitializeContinue() noexcept
 	else if (ratio >= 1.2)
 		ratioEnum = Ratio::kRatio_4x3;
 
+	DefaultFont		= std::make_shared<Graphics::GraphicsFont>();
+	DefaultFontBold	= std::make_shared<Graphics::GraphicsFont>();
+	LogoFontBold	= std::make_shared<Graphics::GraphicsFont>();
+	UserFont		= std::make_shared<Graphics::GraphicsFont>();
+	UserFontBold	= std::make_shared<Graphics::GraphicsFont>();
+
+	if (!DefaultFont->OpenFromFile("tahoma.ttf", 14))
+		REX::ERROR("Font \"tahoma.ttf\" no found");
+
+	if (!DefaultFontBold->OpenFromFile("tahomabd.ttf", 14))
+		REX::ERROR("Font \"tahomabd.ttf\" no found");
+
+	if (!LogoFontBold->OpenFromFile("tahomabd.ttf", 24))
+		REX::ERROR("Font \"tahomabd.ttf\" no found");
+
 	// Create renderer obj mandatory
 	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererBackground>());
+	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererHeader>(rendererData->device, rendererData->context));
 	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererCursor>(rendererData->device, rendererData->context));
 
 	// Setup Platform/Renderer backends
@@ -138,6 +169,13 @@ void ME::GraphicsSystem::GameRendererUI(uint32_t a_unk) noexcept
 
 	constexpr static float bg[4]{ 0.0f, 0.0f, 0.0f, 0.0f };
 	graphics->rendererData->context->ClearRenderTargetView(pRenderTargetViews, bg);
+
+	/*POINT ps{};
+	if (GetCursorPos(&ps))
+	{
+		auto& io = ImGui::GetIO();
+		io.MousePos = ImVec2{ (float)ps.x, (float)ps.y };
+	}*/
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
