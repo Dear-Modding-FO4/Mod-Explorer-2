@@ -15,14 +15,14 @@ void ME::Controls::RendererControlImageButton::DrawButtonStage(uint8_t a_state) 
 		{
 			auto textSize = ImGui::CalcTextSize(caption.c_str());
 			drawList->AddText(position + ImVec2{ imageSize + 4.f, (size.y - textSize.y) * .5f },
-				ImColor{ colorText }, caption.c_str());
+				enabled ? ImColor{ colorText } : ImColor{ colorDisabledText }, caption.c_str());
 		}
 	}
 	else if (caption.length())
 	{
 		auto textSize = ImGui::CalcTextSize(caption.c_str());
 		drawList->AddText(position + ImVec2{ 0.f, (size.y - textSize.y) * .5f },
-			ImColor{ colorText }, caption.c_str());
+			enabled ? ImColor{ colorText } : ImColor{ colorDisabledText }, caption.c_str());
 	}
 }
 
@@ -41,13 +41,14 @@ void ME::Controls::RendererControlImageButton::DoDraw() const noexcept
 				DrawButtonStage(1);
 				DoHovered();
 			}
-			else if (ImGui::IsItemClicked())
+			else
+				goto __default;
+
+			if (ImGui::IsItemClicked())
 			{
 				DrawButtonStage(2);
 				DoClicked();
 			}
-			else
-				goto __default;
 		}
 		else
 		{

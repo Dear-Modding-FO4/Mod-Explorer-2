@@ -30,20 +30,22 @@ ME::RendererHeader::RendererHeader(REX::W32::ID3D11Device* a_device, REX::W32::I
 			frame->Attach(logo.get());
 		}
 
-		quitBtn = std::make_unique<Controls::RendererControlImageButton>(nullptr, "HeaderQuitBtn", "Quit");
+		quitBtn = std::make_unique<Controls::RendererControlImageButton>(nullptr, "HeaderQuitBtn", "");
 		if (quitBtn)
 		{
-			quitBtn->SetTextColor(IM_COL32(43, 237, 230, 255));
 			quitBtn->SetTransparentBackground(true);
 			if (!quitBtn->SetImageDefaultByResId(a_device, a_deviceContext, "\"PNG\"",  IDB_PNG2, true))
 				REX::ERROR("Quit button load default image failed");
 			if (!quitBtn->SetImageHoverByResId(a_device, a_deviceContext, "\"PNG\"", IDB_PNG3, true))
 				REX::ERROR("Quit button load hover image failed");
+			quitBtn->SetHint("Quit");
 			quitBtn->SetFont(DefaultFontBold);
 			frame->Attach(quitBtn.get());
 		}
 	}
 }
+
+static bool showwww = false;
 
 void ME::RendererHeader::Execute() const noexcept
 {
@@ -64,11 +66,19 @@ void ME::RendererHeader::Execute() const noexcept
 
 	if (quitBtn)
 	{
-		quitBtn->SetPosition({ (float)clientX - 100.0f, (vSize.y - 40.f) * .5f });
-		quitBtn->SetSize({ 140.f, 40.f });
+		quitBtn->SetPosition({ (float)clientX - 100.0f, (vSize.y - 34.f) * .5f });
+		quitBtn->SetSize({ 34.f, 34.f });
 	}
 
 	frame->SetPosition({ .0f, 0.f });
 	frame->SetSize(vSize);
 	frame->Draw();
+
+	if (!showwww)
+		Renderer_ConfirmMessage(showwww, "Man", "Look at the boobs?");
+	else
+		Renderer_CheckResult(false, "bitch message"sv, 
+		 "bitch bitch bitch bitch bitch bitch bitch bitch bitchbitch bitch bitch bitch bitch bitch bitch bitch"
+		 " bitchbitch bitch bitch bitch bitch bitch bitch bitch bitchbitch bitch bitch bitch bitch bitch bitch"
+		 " bitch bitchbitch bitch bitch bitch bitch bitch bitch bitch bitchbitch bitch bitch bitch bitch bitch bitch bitch bitch"sv);
 }

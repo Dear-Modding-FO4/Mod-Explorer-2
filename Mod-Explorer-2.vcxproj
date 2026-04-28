@@ -178,6 +178,7 @@
     <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlButton.h" />
     <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlChild.h" />
     <ClInclude Include="Include\ME\Renderer\Controls\RendererControlBase.h" />
+    <ClInclude Include="Include\ME\Renderer\RendererConfirmMessage.h" />
     <ClInclude Include="Include\ME\Shop.h" />
     <ClInclude Include="Include\ME\Util.h" />
     <ClInclude Include="Include\ME\IOSystem.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Include\ME\Renderer\Controls\RendererControlLabel.h" />
     <ClInclude Include="Include\ME\Renderer\Controls\RendererControlAnimLogoSpinner.h" />
     <ClInclude Include="Include\ME\Renderer\Controls\RendererControlImageButton.h" />
+    <ClInclude Include="Include\ME\Renderer\RendererWarningMessage.h" />
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Version\resource_version2.h" />
   </ItemGroup>
@@ -199,6 +201,8 @@
     <Text Include="Version\build_version.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ME\Renderer\RendererConfirmMessage.cpp" />
+    <ClCompile Include="Source\ME\Renderer\RendererWarningMessage.cpp" />
     <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlBase.cpp" />
     <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlButton.cpp" />
     <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlChild.cpp" />

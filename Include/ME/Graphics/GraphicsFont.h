@@ -24,6 +24,7 @@ namespace ME
 
 			[[nodiscard]] virtual bool OpenFromFile(const std::string& a_filename, float a_size) noexcept;
 			[[nodiscard]] virtual bool OpenFromStream(const F4SE::IBufferStream& a_stream, float a_size) noexcept;
+			[[nodiscard]] virtual bool OpenFromResource(const char* a_type, uint32_t a_resourceID, float a_size) noexcept;
 
 			virtual void Push() noexcept;
 			virtual void Pop() noexcept;

@@ -44,4 +44,7 @@ namespace ME
 		class RendererControlAnimLogoSpinner;
 		class RendererControlImageButton;
 	}
+
+	extern bool Renderer_CheckResult(bool a_condition, const std::string_view& a_shortMessage, const std::string_view& a_message) noexcept;
+	extern void Renderer_ConfirmMessage(bool& a_result, const std::string_view& a_caption, const std::string_view& a_message) noexcept;
 }

@@ -17,6 +17,7 @@ namespace ME
 			Graphics::Vec2 size{ 40.f, 40.f };
 			std::string className{ "Base" };
 			std::string caption{ "Base" };
+			std::string hint{};
 			IRendererControlBase* parent{ nullptr };
 			Graphics::Vec4 colorbg{ 1.f, 1.f, 1.f, 1.f };
 			bool round{ false };
@@ -74,6 +75,8 @@ namespace ME
 			virtual inline void SetEnabled(bool a_value) noexcept { enabled = a_value; }
 			[[nodiscard]] virtual inline bool HasTransparentBackground() const noexcept { return transparentBg; }
 			virtual inline void SetTransparentBackground(bool a_value) noexcept { transparentBg = a_value; }
+			[[nodiscard]] virtual inline std::string GetHint() const noexcept { return hint; }
+			virtual inline void SetHint(const char* a_text) noexcept { hint = a_text ? a_text : ""; }
 
 			virtual void Draw() const noexcept = 0;
 		};

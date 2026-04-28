@@ -4,8 +4,11 @@
 #include <ME/Renderer/RendererCursor.h>
 #include <ME/Renderer/RendererBackground.h>
 #include <ME/Renderer/RendererHeader.h>
+#include <ME/Renderer/RendererWarningMessage.h>
+#include <ME/Renderer/RendererConfirmMessage.h>
 #include <ME/Shop.h>
 #include <Windows.h>
+#include <Resource.h>
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -23,6 +26,14 @@ namespace ME
 	std::shared_ptr<Graphics::GraphicsFont> LogoFontBold;
 	std::shared_ptr<Graphics::GraphicsFont> UserFont;
 	std::shared_ptr<Graphics::GraphicsFont> UserFontBold;
+	std::shared_ptr<Graphics::GraphicsFont> CaptionMessageFont;
+	std::shared_ptr<Graphics::GraphicsFont> DefaultMessageFont;
+	std::shared_ptr<Graphics::GraphicsFont> DefaultTextMessageFont;
+	std::shared_ptr<Graphics::GraphicsFont> UserCaptionMessageFont;
+	std::shared_ptr<Graphics::GraphicsFont> UserDefaultTextMessageFont;
+
+	static REX::TOML::Str<> sGeneralFontDefault{ "General"sv, "sFontDefault"sv, "tahoma.ttf" };
+	static REX::TOML::Str<> sGeneralFontBold{ "General"sv, "sFontBold"sv, "tahomabd.ttf" };
 }
 
 bool ME::GraphicsSystem::Initialize() noexcept
@@ -72,25 +83,100 @@ bool ME::GraphicsSystem::InitializeContinue() noexcept
 	else if (ratio >= 1.2)
 		ratioEnum = Ratio::kRatio_4x3;
 
-	DefaultFont		= std::make_shared<Graphics::GraphicsFont>();
-	DefaultFontBold	= std::make_shared<Graphics::GraphicsFont>();
-	LogoFontBold	= std::make_shared<Graphics::GraphicsFont>();
-	UserFont		= std::make_shared<Graphics::GraphicsFont>();
-	UserFontBold	= std::make_shared<Graphics::GraphicsFont>();
+	DefaultFont					= std::make_shared<Graphics::GraphicsFont>();
+	DefaultFontBold				= std::make_shared<Graphics::GraphicsFont>();
+	LogoFontBold				= std::make_shared<Graphics::GraphicsFont>();
+	UserFont					= std::make_shared<Graphics::GraphicsFont>();
+	UserFontBold				= std::make_shared<Graphics::GraphicsFont>();
+	CaptionMessageFont			= std::make_shared<Graphics::GraphicsFont>();
+	DefaultMessageFont			= std::make_shared<Graphics::GraphicsFont>();
+	DefaultTextMessageFont		= std::make_shared<Graphics::GraphicsFont>();
+	UserCaptionMessageFont		= std::make_shared<Graphics::GraphicsFont>();
+	UserDefaultTextMessageFont	= std::make_shared<Graphics::GraphicsFont>();
 
-	if (!DefaultFont->OpenFromFile("tahoma.ttf", 14))
+	float fontSize = 14.f;
+	switch (ratioEnum)
+	{
+	case ME::GraphicsSystem::Ratio::kRatio_16x9:
+		fontSize = 16.f;
+		break;
+	case ME::GraphicsSystem::Ratio::kRatio_21x9:
+		fontSize = 18.f;
+		break;
+	default:
+		break;
+	}
+
+	if (!DefaultFont->OpenFromFile("tahoma.ttf", fontSize))
+	{
 		REX::ERROR("Font \"tahoma.ttf\" no found");
+		DefaultFont.reset();
+	}
 
-	if (!DefaultFontBold->OpenFromFile("tahomabd.ttf", 14))
+	if (!DefaultFontBold->OpenFromFile("tahomabd.ttf", fontSize))
+	{
 		REX::ERROR("Font \"tahomabd.ttf\" no found");
+		DefaultFontBold.reset();
+	}
 
-	if (!LogoFontBold->OpenFromFile("tahomabd.ttf", 24))
+	if (!LogoFontBold->OpenFromFile("tahomabd.ttf", fontSize * 1.5f))
+	{
 		REX::ERROR("Font \"tahomabd.ttf\" no found");
+		LogoFontBold.reset();
+	}
+
+	if (!CaptionMessageFont->OpenFromResource("\"FONT\"", IDB_FONTBASEB, 64))
+	{
+		REX::ERROR("Font \"{}\" no found", IDB_FONTBASEB);
+		CaptionMessageFont.reset();
+	}
+
+	if (!DefaultMessageFont->OpenFromResource("\"FONT\"", IDB_FONTBASEN, 24))
+	{
+		REX::ERROR("Font \"{}\" no found", IDB_FONTBASEN);
+		DefaultMessageFont.reset();
+	}
+
+	if (!DefaultTextMessageFont->OpenFromResource("\"FONT\"", IDB_FONTBASEN, 18))
+	{
+		REX::ERROR("Font \"{}\" no found", IDB_FONTBASEB);
+		DefaultTextMessageFont.reset();
+	}
+
+	if (!UserCaptionMessageFont->OpenFromFile(sGeneralFontDefault.GetValue(), 24))
+	{
+		REX::ERROR("Font \"{}\" no found", IDB_FONTBASEN);
+		UserCaptionMessageFont.reset();
+	}
+
+	if (!UserDefaultTextMessageFont->OpenFromFile(sGeneralFontDefault.GetValue(), 18))
+	{
+		REX::ERROR("Font \"{}\" no found", IDB_FONTBASEB);
+		UserDefaultTextMessageFont.reset();
+	}
+
+	auto& style = ImGui::GetStyle();
+
+	style.WindowBorderSize = 0.f;
+	style.ChildBorderSize = 0.f;
+	style.PopupBorderSize = 0.f;
+	style.FrameBorderSize = 0.f;
+	style.WindowRounding = 12.f;
+	style.PopupRounding = 8.f;
+	style.AntiAliasedLines = true;
+
+	style.Colors[ImGuiCol_PopupBg] = ImVec4(.07f, .07f, .09f, 0.6f);
+	style.Colors[ImGuiCol_ModalWindowDimBg] = { .0f, .0f, .0f, .8f };
 
 	// Create renderer obj mandatory
 	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererBackground>());
 	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererHeader>(rendererData->device, rendererData->context));
+
+	// TODO
+
 	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererCursor>(rendererData->device, rendererData->context));
+	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererConfirmMessage>());
+	GraphicsManager::GetSingleton()->Add(std::make_shared<RendererWarningMessage>());
 
 	// Setup Platform/Renderer backends
 	return 

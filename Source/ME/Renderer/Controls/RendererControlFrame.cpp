@@ -36,7 +36,7 @@ void ME::Controls::RendererControlFrame::Draw() const noexcept
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
 	if (colorbg.w <= .01f) flags |= ImGuiWindowFlags_NoBackground;
 
-	ImGui::Begin(std::format("{}###{}"sv, caption, className).c_str(), nullptr, flags);
+	ImGui::Begin(std::format("{}##{}"sv, caption, className).c_str(), nullptr, flags);
 	{
 		std::lock_guard locker(const_cast<RendererControlFrame*>(this)->lock);
 		for (auto child : childs)

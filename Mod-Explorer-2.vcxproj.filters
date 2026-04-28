@@ -57,6 +57,8 @@
     <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlChild.h" />
     <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlBase.h" />
     <ClInclude Include="Include\ME\Renderer\Controls\IRendererControlButton.h" />
+    <ClInclude Include="Include\ME\Renderer\RendererWarningMessage.h" />
+    <ClInclude Include="Include\ME\Renderer\RendererConfirmMessage.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Version\resource_version.rc">
@@ -100,6 +102,8 @@
     <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlBase.cpp" />
     <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlChild.cpp" />
     <ClCompile Include="Source\ME\Renderer\Controls\IRendererControlButton.cpp" />
+    <ClCompile Include="Source\ME\Renderer\RendererWarningMessage.cpp" />
+    <ClCompile Include="Source\ME\Renderer\RendererConfirmMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resource\cursor.png" />
