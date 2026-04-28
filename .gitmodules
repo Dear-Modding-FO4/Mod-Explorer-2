@@ -10,3 +10,6 @@
 [submodule "Depends/toml11"]
 	path = Depends/toml11
 	url = https://github.com/ToruNiina/toml11.git
+[submodule "Depends/imspinner"]
+	path = Depends/imspinner
+	url = https://github.com/dalerank/imspinner.git
